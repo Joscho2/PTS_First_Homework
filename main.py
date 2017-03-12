@@ -1,10 +1,11 @@
 import hashlib
+import getpass
 
 def str_encode(string):
     return string.encode('utf-8')
 
 def zisti_heslo():
-    return input('Zadajte heslo: ')
+    return getpass.getpass('Zadajte heslo: ')
 	
 def vstup_heslo():
        return ulozene_heslo.hexdigest() == hashlib.sha512(str_encode(zisti_heslo())).hexdigest()
