@@ -15,14 +15,18 @@ def cmd_points(d):
     if name not in hrac:
         hrac[name] = int(number)
     else:
-        hrac[name] += int(number)  
+        hrac[name] += int(number)
+
 def cmd_reduce(d):
     number = d[1]
-    print("Reduce " + number)
+    for h in hrac: hrac[h] -= int(number)
 
 def cmd_junior(d):
     name = d[1]
-    print("Junior " + name)
+    if name not in hrac:
+        print("Hrac nenájdený!")
+        return
+    if name not in junior: junior.append(name)
 
 def cmd_ranking(l):
     if len(l) >= 1:
@@ -31,10 +35,13 @@ def cmd_ranking(l):
         rank_all()
 
 def rank_all():
-    for name, score in sorted(hrac.items()):
-        print(name, score)
+    for name in sorted(hrac, key = hrac.get, reverse = True):
+        print(name, hrac[name])
+
 def rank_junior():
-    print("Junior")
+    for j in sorted(filter(lambda x:x in junior, hrac), key = hrac.get, reverse = True):
+        print(j, hrac[j])
+
 def quit(d):
     exit()
 
@@ -44,6 +51,7 @@ ulozene_heslo = hashlib.sha512(str_encode(zisti_heslo()));
 
 v = []
 hrac = {}
+junior = []
 
 command = {
     'points' : cmd_points,
@@ -61,6 +69,8 @@ while True:
                 command[v[0]](dict((i, v[i]) for i in range(1, len(v))))
             except KeyError:
                 print("Neplatný vstup!")
+            except ValueError:
+                print("Zle uvedené argumenty!")
         else:
             print('Nesprávne heslo!')
     else:
