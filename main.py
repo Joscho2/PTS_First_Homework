@@ -1,5 +1,6 @@
 import hashlib
 import getpass
+import math
 import sys
 
 def str_encode(string):
@@ -26,7 +27,7 @@ def cmd_points(d):
 #parameter je slovnik d, number sa ziska ako d[1]
 def cmd_reduce(d):
     number = d[1]
-    for h in hrac: hrac[h] -= int(number)
+    for h in hrac: hrac[h] -= math.floor(hrac[h]/100*int(number))
 
 #parameter je slovnik d, name sa ziska ako d[1]
 def cmd_junior(d):
