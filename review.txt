@@ -1,1 +1,6 @@
-?Peter`
+1.
+a. Komenty vo funkciach nie su v doctringoch.
+b. 60 riadok, fukcia quit ma zbytocny argument
+c. 95 riadok, nie je to vseobecne, keby sme pridali novu sadu prikazov bez hesla, zbytocne by sa do if muselo pridavat nove or. Kod je rigid v tomto mieste
+
+
