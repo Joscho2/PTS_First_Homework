@@ -6,17 +6,23 @@ import sys
 def str_encode(string):
     return string.encode('utf-8')
 
-#Získa heslo z terminálu
 def zisti_heslo():
+    """
+    Získa heslo z terminálu.
+    """
     return getpass.getpass('Zadajte heslo: ')
 
-#Vypýta si heslo a porovná ho s heslom v pamäti
 def vstup_heslo():
-       return ulozene_heslo.hexdigest() == hashlib.sha512(str_encode(zisti_heslo())).hexdigest()
+    """
+    Výpýta si heslo a porovná ho s heslom v pamäti
+    """
+    return ulozene_heslo.hexdigest() == hashlib.sha512(str_encode(zisti_heslo())).hexdigest()
 
-#hracovi name prida number bodov (ak neexistuje, prida ho do zoznamu s name bodmi)
-#parameter je slovnik d, name sa ziska ako d[1], number ako d[2]
 def cmd_points(d):
+    """
+    Hracovi name prida number bodov (ak neexistuje, prida ho do zoznamu s name bodmi)
+    parameter je slovnik d, name sa ziska ako d[1], number ako d[2].
+    """
     name = d[1]
     number = d[2]
     if name not in hrac:
@@ -24,41 +30,57 @@ def cmd_points(d):
     else:
         hrac[name] += int(number)
 
-#parameter je slovnik d, number sa ziska ako d[1]
 def cmd_reduce(d):
+    """
+    Parameter je slovnik d, number sa ziska ako d[1].
+    """
     number = d[1]
     for h in hrac: hrac[h] -= math.floor(hrac[h]/100*int(number))
 
-#parameter je slovnik d, name sa ziska ako d[1]
 def cmd_junior(d):
+    """
+    Parameter je slovnik d, name sa ziska ako d[1].
+    """
     name = d[1]
     if name not in hrac:
         print("Hrac nenájdený!")
         return
     if name not in junior: junior.append(name)
 
-#parameter je slovnik l, ak je v slovniku nejake slovo vola sa funkcia rank_junior,
-#inak rank all (mohlo by sa kontrolovať, či je v slovniku prave jedno slovo a ci je to
-#slovo "junior", inak by mohlo hodiť chybu)
 def cmd_ranking(l):
+    """
+    Parameter je slovnik l, ak je v slovniku nejake slovo vola sa funkcia rank_junior,
+    inak rank all (mohlo by sa kontrolovať, či je v slovniku prave jedno slovo a ci je to
+    slovo "junior", inak by mohlo hodiť chybu).
+    """
     if len(l) >= 1:
         rank_junior()
     else:
         rank_all()
 
-#vypíše poradie medzi všetkými hráčmi, utriedene od najväčšieho
 def rank_all():
+    """
+    Vypíše poradie medzi všetkými hráčmi, utriedene od najväčšieho.
+    """
     for name in sorted(hrac, key = hrac.get, reverse = True):
         print(name, hrac[name])
 
-#vypíše poradie juniorov, utriedene od najväčšieho
 def rank_junior():
+    """
+    Vypíše poradie juniorov, utriedene od najväčšieho.
+    """
     for j in sorted(filter(lambda x:x in junior, hrac), key = hrac.get, reverse = True):
         print(j, hrac[j])
 
 #ukončí program bez ohľadu na parametre
 def quit(d):
-    exit()
+    """
+    Ukončí programm v prípade, že príkazu quit neboli pridané parametre.
+    """
+    if(len(d) != 0): 
+        print("Príkaz quit nemá parametre! Nechceli ste použiť iný príkaz ?")
+    else:
+        exit()
 
 #################################  
 
@@ -82,6 +104,10 @@ command = {
     'ranking': cmd_ranking, 
     'quit' : quit
 }
+
+#list, v ktorom sú zapísané príkazy pri ktorých použití sa nevyžaduje heslo
+excludes = ['ranking']
+
 while True:
     #dekorácia terminálu
     sys.stdout.write('$ ')
@@ -92,7 +118,7 @@ while True:
     #ak je to neznámi príkaz hneď to dáme užívateľovi vedieť (nebudeme pýtať heslo)
     if v[0] in command.keys():
     	#ak je príkaz iný ako ranking, používateľ musí zadať heslo
-        if v[0] == 'ranking' or vstup_heslo():
+        if v[0] in excludes or vstup_heslo():
             try:
 	        #volanie funkcie podľa užívateľom zadaného príkazu
 		#parameter je slovník, v ktorom sa nachádza všetko čo je na vstupe
